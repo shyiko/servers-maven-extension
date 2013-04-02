@@ -9,27 +9,29 @@ Usage
 
 Include following extension declaration into the (root) pom.xml:
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    ...
+    <build>
         ...
-        <build>
+        <extensions>
             ...
-            <extensions>
-                ...
-                <extension>
-                    <groupId>com.github.shyiko.servers-maven-extension</groupId>
-                    <artifactId>servers-maven-extension</artifactId>
-                    <version>1.0.0</version>
-                </extension>
-                ...
-            </extensions>
+            <extension>
+                <groupId>com.github.shyiko.servers-maven-extension</groupId>
+                <artifactId>servers-maven-extension</artifactId>
+                <version>1.0.0</version>
+            </extension>
             ...
-        </build>
+        </extensions>
+        ...
+    </build>
 
-    </project>
+</project>
+```
 
 
 Example
@@ -37,55 +39,58 @@ Example
 
 settings.xml
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
-        <servers>
-            <server>
-                <id>ssh-server</id>
-                <username>username</username>
-                <privateKey>${user.home}/.ssh/id_rsa</privateKey>
-            </server>
-        </servers>
-        ...
+    <servers>
+        <server>
+            <id>ssh-server</id>
+            <username>username</username>
+            <privateKey>${user.home}/.ssh/id_rsa</privateKey>
+        </server>
+    </servers>
+    ...
 
-    </settings>
+</settings>
+```
 
 pom.xml
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-        ...
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>...</groupId>
-                    <artifactId>...</artifactId>
-                    <configuration>
-                        <location>
-                            scp://${settings.servers.server.ssh-server.username}:from-key-file@${ssh-server.url}
-                        </location>
-                        <keyfile>${settings.servers.server.ssh-server.privateKey}</keyfile>
-                        ...
-                     </configuration>
-                </plugin>
-            </plugins>
-            <extensions>
-                <extension>
-                    <groupId>com.github.shyiko.servers-maven-extension</groupId>
-                    <artifactId>servers-maven-extension</artifactId>
-                    <version>1.0.0</version>
-                </extension>
-            </extensions>
-        </build>
+    ...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>...</groupId>
+                <artifactId>...</artifactId>
+                <configuration>
+                    <location>
+                        scp://${settings.servers.server.ssh-server.username}:from-key-file@${ssh-server.url}
+                    </location>
+                    <keyfile>${settings.servers.server.ssh-server.privateKey}</keyfile>
+                    ...
+                </configuration>
+            </plugin>
+        </plugins>
+        <extensions>
+            <extension>
+                <groupId>com.github.shyiko.servers-maven-extension</groupId>
+                <artifactId>servers-maven-extension</artifactId>
+                <version>1.0.0</version>
+            </extension>
+        </extensions>
+    </build>
 
-    </project>
-
+</project>
+```
 
 License
 ---------------
