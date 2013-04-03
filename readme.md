@@ -1,7 +1,7 @@
 #servers-maven-extension#
 
 Maven 3+ extension for exposing settings.xml/servers to ${}. What this means is that you can reference content of
-`<servers>...</servers>` section (in form of ${settings.servers.server.<server id>.<property>}) from any pom.xml file
+`<servers>...</servers>` section (in form of ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;}) from any pom.xml file
 within your project.
 
 Usage
