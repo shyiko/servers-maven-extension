@@ -4,7 +4,7 @@
 
     <groupId>com.github.shyiko.servers-maven-extension</groupId>
     <artifactId>servers-maven-extension</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
 
     <name>servers-maven-extension</name>
     <description>Maven extension for exposing settings.xml/servers to ${}</description>
