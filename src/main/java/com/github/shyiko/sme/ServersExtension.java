@@ -53,7 +53,9 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant {
                     Server.class.getMethod("set" + fieldNameWithFirstLetterCapitalized, new Class[]{String.class}).
                             invoke(server, resolvedValue);
                     if (resolvedValue != null) {
-                        properties.put("settings.servers.server." + server.getId() + "." + field, resolvedValue);
+                        properties.put("settings.servers.server." + server.getId() + "." + field,
+                                resolvedValue); // legacy syntax, left for backward compatibility
+                        properties.put("settings.servers." + server.getId() + "." + field, resolvedValue);
                     }
                 }
             }
