@@ -1,8 +1,10 @@
 #servers-maven-extension#
 
 Maven 3+ extension for exposing settings.xml/servers to ${}. What this means is that you can reference content of
-`<servers>...</servers>` section (in form of ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;}) from any pom.xml file
+`<servers>...</servers>` section (in form of ${settings.servers.&lt;server id&gt;.&lt;property&gt;}) from any pom.xml file
 within your project.
+
+> ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;} format is also supported for the backwards compatibility with 1.0.0 release.
 
 Usage
 ---------------
@@ -23,7 +25,7 @@ Include following extension declaration into the (root) pom.xml:
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0</version>
             </extension>
             ...
         </extensions>
@@ -73,9 +75,9 @@ pom.xml
                 <artifactId>...</artifactId>
                 <configuration>
                     <location>
-                        scp://${settings.servers.server.ssh-server.username}:from-key-file@${ssh-server.url}
+                        scp://${settings.servers.ssh-server.username}:from-key-file@${ssh-server.url}
                     </location>
-                    <keyfile>${settings.servers.server.ssh-server.privateKey}</keyfile>
+                    <keyfile>${settings.servers.ssh-server.privateKey}</keyfile>
                     ...
                 </configuration>
             </plugin>
@@ -84,7 +86,7 @@ pom.xml
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.0.0</version>
+                <version>1.1.0</version>
             </extension>
         </extensions>
     </build>
