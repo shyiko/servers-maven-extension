@@ -28,6 +28,7 @@ import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:stanley.shyiko@gmail.com">Stanley Shyiko</a>
@@ -35,27 +36,37 @@ import java.util.Map;
 @Component(role = AbstractMavenLifecycleParticipant.class)
 public class ServersExtension extends AbstractMavenLifecycleParticipant {
 
-    private static final String[] FIELDS = new String[] {"username", "password", "passphrase", "privateKey",
-            "filePermissions", "directoryPermissions"};
+    private static final String[] FIELDS = new String[]{"username", "password", "passphrase", "privateKey",
+        "filePermissions", "directoryPermissions"};
 
     @Override
     public void afterProjectsRead(MavenSession session) throws MavenExecutionException {
         MojoExecution mojoExecution = new MojoExecution(new MojoDescriptor());
         ExpressionEvaluator expressionEvaluator = new PluginParameterExpressionEvaluator(session, mojoExecution);
+        Properties userProperties = session.getUserProperties();
         Map<String, String> properties = new HashMap<String, String>();
         try {
             for (Server server : session.getSettings().getServers()) {
+                String serverId = server.getId();
                 for (String field : FIELDS) {
+                    String[] aliases = getAliases(serverId, field);
                     String fieldNameWithFirstLetterCapitalized = upperCaseFirstLetter(field);
                     String fieldValue = (String) Server.class.
-                            getMethod("get" + fieldNameWithFirstLetterCapitalized).invoke(server);
+                        getMethod("get" + fieldNameWithFirstLetterCapitalized).invoke(server);
+                    for (String alias : aliases) {
+                        String userPropertyValue = userProperties.getProperty(alias);
+                        if (userPropertyValue != null) {
+                            fieldValue = userPropertyValue;
+                            break;
+                        }
+                    }
                     String resolvedValue = (String) expressionEvaluator.evaluate(fieldValue);
                     Server.class.getMethod("set" + fieldNameWithFirstLetterCapitalized, new Class[]{String.class}).
-                            invoke(server, resolvedValue);
+                        invoke(server, resolvedValue);
                     if (resolvedValue != null) {
-                        properties.put("settings.servers.server." + server.getId() + "." + field,
-                                resolvedValue); // legacy syntax, left for backward compatibility
-                        properties.put("settings.servers." + server.getId() + "." + field, resolvedValue);
+                        for (String alias : aliases) {
+                            properties.put(alias, resolvedValue);
+                        }
                     }
                 }
             }
@@ -65,6 +76,13 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant {
         } catch (Exception e) {
             throw new MavenExecutionException("Failed to expose settings.servers.*", e);
         }
+    }
+
+    private String[] getAliases(String serverId, String field) {
+        return new String[]{
+            "settings.servers." + serverId + "." + field,
+            "settings.servers.server." + serverId + "." + field, // legacy syntax, left for backward compatibility
+        };
     }
 
     private String upperCaseFirstLetter(String string) {
