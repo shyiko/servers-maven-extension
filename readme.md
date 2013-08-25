@@ -25,7 +25,7 @@ Include following extension declaration into the (root) pom.xml:
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.1.0</version>
+                <version>1.2.0</version>
             </extension>
             ...
         </extensions>
@@ -86,7 +86,7 @@ pom.xml
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.1.0</version>
+                <version>1.2.0</version>
             </extension>
         </extensions>
     </build>
