@@ -23,21 +23,38 @@ import org.apache.maven.plugin.PluginParameterExpressionEvaluator;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Server;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:stanley.shyiko@gmail.com">Stanley Shyiko</a>
  */
 @Component(role = AbstractMavenLifecycleParticipant.class)
-public class ServersExtension extends AbstractMavenLifecycleParticipant {
+public class ServersExtension extends AbstractMavenLifecycleParticipant implements Contextualizable {
+
+    private static final String SECURITY_DISPATCHER_CLASS_NAME =
+        "org.sonatype.plexus.components.sec.dispatcher.SecDispatcher";
 
     private static final String[] FIELDS = new String[]{"username", "password", "passphrase", "privateKey",
         "filePermissions", "directoryPermissions"};
+
+    private PlexusContainer container;
+
+    public void contextualize(final Context context) throws ContextException {
+        container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
+    }
 
     @Override
     public void afterProjectsRead(MavenSession session) throws MavenExecutionException {
@@ -53,6 +70,9 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant {
                     String fieldNameWithFirstLetterCapitalized = upperCaseFirstLetter(field);
                     String fieldValue = (String) Server.class.
                         getMethod("get" + fieldNameWithFirstLetterCapitalized).invoke(server);
+                    if (fieldValue != null) {
+                        fieldValue = decryptInlinePasswords(fieldValue);
+                    }
                     for (String alias : aliases) {
                         String userPropertyValue = userProperties.getProperty(alias);
                         if (userPropertyValue != null) {
@@ -76,6 +96,29 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant {
         } catch (Exception e) {
             throw new MavenExecutionException("Failed to expose settings.servers.*", e);
         }
+    }
+
+    private String decryptInlinePasswords(String v) {
+        Pattern p = Pattern.compile("(\\{[^\\}]+\\})");
+        Matcher m = p.matcher(v);
+        StringBuffer s = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(s, decryptPassword(m.group(1)));
+        }
+        m.appendTail(s);
+        return s.toString();
+    }
+
+    private String decryptPassword(String password) {
+        try {
+            Class<?> securityDispatcherClass = container.getClass().getClassLoader()
+                .loadClass(SECURITY_DISPATCHER_CLASS_NAME);
+            Object securityDispatcher = container.lookup(SECURITY_DISPATCHER_CLASS_NAME, "maven");
+            Method decrypt = securityDispatcherClass.getMethod("decrypt", String.class);
+            return (String) decrypt.invoke(securityDispatcher, password);
+        } catch (Exception ignore) {
+        }
+        return password;
     }
 
     private String[] getAliases(String serverId, String field) {
