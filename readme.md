@@ -2,7 +2,8 @@
 
 Maven 3+ extension for exposing settings.xml/servers to ${}. What this means is that you can reference content of
 `<servers>...</servers>` section (in form of ${settings.servers.&lt;server id&gt;.&lt;property&gt;}) from any pom.xml file
-within your project. Also, starting from 1.2.0 release any part of `<servers>...</servers>` can be overridden with user specified properties (-Dsettings.servers.&lt;server id&gt;.&lt;property&gt;=&lt;value&gt;).
+within your project. Also, starting from 1.2.0 release any part of `<servers>...</servers>` can be overridden with user
+specified properties (-Dsettings.servers.&lt;server id&gt;.&lt;property&gt;=&lt;value&gt;).
 
 > ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;} format is also supported for the backwards compatibility with 1.0.0 release.
 
@@ -25,7 +26,7 @@ Include following extension declaration into the (root) pom.xml:
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.2.0</version>
+                <version>1.3.0</version>
             </extension>
             ...
         </extensions>
@@ -34,7 +35,6 @@ Include following extension declaration into the (root) pom.xml:
 
 </project>
 ```
-
 
 Example
 ---------------
@@ -86,7 +86,7 @@ pom.xml
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.2.0</version>
+                <version>1.3.0</version>
             </extension>
         </extensions>
     </build>
