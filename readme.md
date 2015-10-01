@@ -38,6 +38,14 @@ Include following extension declaration into the (root) pom.xml:
 </project>
 ```
 
+### Export servers config as System property
+
+It is possible that build system or other maven plugins can export or log project properties.
+To avoid presenting sensitive data in public place we can store configuration from servers in System parameters.
+
+To change behavior of this extension to store servers config in System parameters
+we add to project property `servers.exportAsSysProp` with value `true`.
+
 Example
 ---------------
 

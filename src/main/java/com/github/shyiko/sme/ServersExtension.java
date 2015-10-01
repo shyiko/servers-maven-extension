@@ -61,6 +61,9 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant implemen
         MojoExecution mojoExecution = new MojoExecution(new MojoDescriptor());
         ExpressionEvaluator expressionEvaluator = new PluginParameterExpressionEvaluator(session, mojoExecution);
         Properties userProperties = session.getUserProperties();
+
+        boolean exportAsSysProp = isExtensionProperty(session, "servers.exportAsSysProp");
+
         Map<String, String> properties = new HashMap<String, String>();
         try {
             for (Server server : session.getSettings().getServers()) {
@@ -90,12 +93,37 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant implemen
                     }
                 }
             }
-            for (MavenProject project : session.getProjects()) {
-                project.getProperties().putAll(properties);
+
+            if (exportAsSysProp) {
+                System.getProperties().putAll(properties);
+            } else {
+                for (MavenProject project : session.getProjects()) {
+                    Properties projectProperties = project.getProperties();
+                    projectProperties.putAll(properties);
+                }
             }
         } catch (Exception e) {
             throw new MavenExecutionException("Failed to expose settings.servers.*", e);
         }
+    }
+
+    /**
+     * Lookup for property name in maven project.
+     *
+     * @param session current maven session
+     * @param propName property name
+     * @return true is property is set and has value "true"
+     */
+    private boolean isExtensionProperty(MavenSession session, String propName) {
+        Properties properties = session.getUserProperties();
+        String value = properties.getProperty(propName);
+        if (value != null) {
+            return Boolean.valueOf(value);
+        }
+
+        properties = session.getCurrentProject().getProperties();
+        value = properties.getProperty(propName);
+        return Boolean.valueOf(value);
     }
 
     private String decryptInlinePasswords(String v) {
