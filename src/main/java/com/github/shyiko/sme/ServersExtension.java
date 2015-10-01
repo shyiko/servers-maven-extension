@@ -122,6 +122,8 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant implemen
     }
 
     private String[] getAliases(String serverId, String field) {
+        // replace space in serverId by "_"
+        serverId = serverId.replaceAll(" +", "_");
         return new String[]{
             "settings.servers." + serverId + "." + field,
             "settings.servers.server." + serverId + "." + field, // legacy syntax, left for backward compatibility

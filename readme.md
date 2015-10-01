@@ -7,6 +7,8 @@ specified properties (-Dsettings.servers.&lt;server id&gt;.&lt;property&gt;=&lt;
 
 > ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;} format is also supported for the backwards compatibility with 1.0.0 release.
 
+If you have space in serverId tag it will be replaced by "_" in property name.
+
 Usage
 ---------------
 
