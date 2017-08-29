@@ -1,4 +1,4 @@
-#servers-maven-extension#
+# servers-maven-extension
 
 Maven 3+ extension for exposing settings.xml/servers to ${}. What this means is that you can reference content of
 `<servers>...</servers>` section (in form of ${settings.servers.&lt;server id&gt;.&lt;property&gt;}) from any pom.xml file
@@ -26,7 +26,7 @@ Include following extension declaration into the (root) pom.xml:
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.3.0</version>
+                <version>1.3.1</version>
             </extension>
             ...
         </extensions>
@@ -86,7 +86,7 @@ pom.xml
             <extension>
                 <groupId>com.github.shyiko.servers-maven-extension</groupId>
                 <artifactId>servers-maven-extension</artifactId>
-                <version>1.3.0</version>
+                <version>1.3.1</version>
             </extension>
         </extensions>
     </build>
