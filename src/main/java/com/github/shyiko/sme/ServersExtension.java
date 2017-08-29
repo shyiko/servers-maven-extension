@@ -115,7 +115,7 @@ public class ServersExtension extends AbstractMavenLifecycleParticipant implemen
                 .loadClass(SECURITY_DISPATCHER_CLASS_NAME);
             Object securityDispatcher = container.lookup(SECURITY_DISPATCHER_CLASS_NAME, "maven");
             Method decrypt = securityDispatcherClass.getMethod("decrypt", String.class);
-            return (String) decrypt.invoke(securityDispatcher, password);
+            return ((String) decrypt.invoke(securityDispatcher, password)).replace("$", "\\$");
         } catch (Exception ignore) {
         }
         return password;
