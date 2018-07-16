@@ -7,6 +7,8 @@ specified properties (-Dsettings.servers.&lt;server id&gt;.&lt;property&gt;=&lt;
 
 > ${settings.servers.server.&lt;server id&gt;.&lt;property&gt;} format is also supported for the backwards compatibility with 1.0.0 release.
 
+(see [#7](https://github.com/shyiko/servers-maven-extension/issues/7#issuecomment-405325619) for security implications)
+
 Usage
 ---------------
 
